@@ -1,32 +1,23 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import SignIn from './components/SignIn/SignIn';
+import { withFirebase } from './components/Firebase';
 import './App.css';
 
-class App extends Component {
-  constructor (props) {
-    super(props);
-  }
+const App = (props) => {
+  const [authUser, setAuthUser] = useState();
+  useEffect(() => {
+    const updateAuthUser = (resp) => {
+      resp ? setAuthUser(resp) : setAuthUser(null);
+      console.log(resp);
+    }
+    props.firebase.auth.onAuthStateChanged(updateAuthUser);
+  });
 
-  render () {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  };
+  return (
+    <div className="App">
+      <SignIn />
+    </div>
+  );
 }
 
-export default App;
+export default withFirebase(App);
