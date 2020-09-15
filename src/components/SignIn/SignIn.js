@@ -1,6 +1,22 @@
 import React, { useState } from 'react';
 import { withFirebase } from '../Firebase'
-import classes from './SignIn.css';
+import './SignIn.css';
+
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+    root: {
+        '& .MuiTextField-root': {
+            margin: '5px'
+        },
+        '& .MuiButton-root': {
+            margin: '5px'
+        }
+    }
+});
 
 const SignIn = (props) => {
     const [email, setEmail] = useState();
@@ -21,16 +37,40 @@ const SignIn = (props) => {
 
     }
 
+    const classes = useStyles();
+
     return (
-        <div>
-            <h1>SignIn</h1>
-            <form>
-                <label for="email">email:</label>
-                <input type="text" id="email" name="email" onChange={emailChangedHandler} />
-                <label for="password">password:</label>
-                <input type="text" id="password" name="password" onChange={passwordChangedHandler} />
-                <button type="button" onClick={handleSignIn}>Sign In</button>
+        <div className="SignIn__Container">
+            <h3 className="SignIn__Title">Project Progress</h3>
+            <form className={classes.root + " SignIn__Form"}>
+                <TextField
+                    type="text"
+                    id="email"
+                    label="Email"
+                    variant="outlined"
+                    size="small"
+                    onChange={emailChangedHandler}
+                />
+                <TextField
+                    type="text"
+                    id="password"
+                    label="Password"
+                    variant="outlined"
+                    size="small"
+                    onChange={passwordChangedHandler}
+                />
+                <Button 
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSignIn}
+                >
+                    Login
+                </Button>
             </form>
+
+            <div className="SignIn__RequestSignUp">
+                Don't have an account? <a href="#">Sign Up</a>
+            </div>
         </div>
     );
 };

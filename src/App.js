@@ -3,6 +3,8 @@ import SignIn from './components/SignIn/SignIn';
 import { withFirebase } from './components/Firebase';
 import './App.css';
 
+import { Container } from '@material-ui/core';
+
 const App = (props) => {
   const [authUser, setAuthUser] = useState();
   useEffect(() => {
