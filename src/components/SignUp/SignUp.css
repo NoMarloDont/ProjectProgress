@@ -1,0 +1,22 @@
+.SignUp__Container {
+    border: 2px solid lightgrey;
+    padding: 96px;
+    max-width: 480px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.SignUp__Title {
+    margin-top: -4px;
+}
+
+.SignUp__Form {
+    display: flex;
+    flex-direction: column;
+}
+
+.SignUp__RequestSignUp {
+    margin-top: 8px;
+}

@@ -20,18 +20,18 @@ class Firebase {
   }
 
   createUser = (email, password) => {
-    this.auth.createUserWithEmailAndPassword(email, password);
+    this.auth.createUserWithEmailAndPassword(email, password).catch(err => console.error(err));
   }
 
   signInUser = (email, password) =>
     this.auth.signInWithEmailAndPassword(email, password);
- 
+
   signOutUser = () => this.auth.signOut();
 
   // Stretch Goals
-  
+
   // resetPassword = email => this.auth.sendPasswordResetEmail(email);
- 
+
   // updatePassword = password =>
   //   this.auth.currentUser.updatePassword(password);
 }

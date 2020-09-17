@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import SignIn from './components/SignIn/SignIn';
+import SignUp from './components/SignUp/SignUp';
 import { withFirebase } from './components/Firebase';
 import './App.css';
-
-import { Container } from '@material-ui/core';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 
 const App = (props) => {
   const [authUser, setAuthUser] = useState();
@@ -16,9 +20,18 @@ const App = (props) => {
   });
 
   return (
-    <div className="App">
-      <SignIn />
-    </div>
+    <Router>
+      <div className="App">
+        <Switch>
+          <Route exact path="/signin">
+            <SignIn />
+          </Route>
+          <Route exact path="/signup">
+            <SignUp />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

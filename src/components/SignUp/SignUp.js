@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { withFirebase } from '../Firebase'
-import './SignIn.css';
+import './SignUp.css';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -20,33 +20,35 @@ const useStyles = makeStyles({
     }
 });
 
-const SignIn = (props) => {
+const SignUp = (props) => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const [confirmPassword, setConfirmPassword] = useState();
 
     const emailChangedHandler = (event) => {
-        setEmail(event.target.value)
+        setEmail(event.target.value);
     }
 
     const passwordChangedHandler = (event) => {
-        setPassword(event.target.value)
+        setPassword(event.target.value);
     }
 
-    let isDisabled = !(email && password);
+    const confirmPasswordChangedHandler = (event) => {
+        setConfirmPassword(event.target.value);
+    }
 
-    const handleSignIn = () => {
-        props.firebase.signInUser(email, password).then(resp => {
-            alert("Signed in with " + resp);
-        }).catch(err => console.error(err));
+    let isDisabled = !(email && password && password === confirmPassword);
 
+    const handleSignUp = () => {
+        props.firebase.createUser(email, password);
     }
 
     const classes = useStyles();
 
     return (
-        <div className="SignIn__Container">
-            <h3 className="SignIn__Title">Project Progress</h3>
-            <form className={classes.root + " SignIn__Form"}>
+        <div className="SignUp__Container">
+            <h3 className="SignUp__Title">Project Progress</h3>
+            <form className={classes.root + " SignUp__Form"}>
                 <TextField
                     type="text"
                     id="email"
@@ -63,21 +65,29 @@ const SignIn = (props) => {
                     size="small"
                     onChange={passwordChangedHandler}
                 />
+                <TextField
+                    type="text"
+                    id="confirmPassword"
+                    label="Confirm Password"
+                    variant="outlined"
+                    size="small"
+                    onChange={confirmPasswordChangedHandler}
+                />
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={handleSignIn}
+                    onClick={handleSignUp}
                     disabled={isDisabled}
                 >
-                    Login
+                    Sign Up
                 </Button>
             </form>
 
-            <div className="SignIn__RequestSignUp">
-                Don't have an account? <Link to="/signup">Sign Up</Link>
+            <div className="SignUp__RequestSignUp">
+                Already have an account? <Link to="/signin">Sign In</Link>
             </div>
         </div>
     );
 };
 
-export default withFirebase(SignIn);
+export default withFirebase(SignUp);
