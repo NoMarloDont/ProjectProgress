@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { withFirebase } from '../Firebase'
+import { withFirebase } from '../Firebase';
 import './SignIn.css';
 
 import TextField from '@material-ui/core/TextField';
@@ -38,7 +38,6 @@ const SignIn = (props) => {
         props.firebase.signInUser(email, password).then(resp => {
             alert("Signed in with " + resp);
         }).catch(err => console.error(err));
-
     }
 
     const classes = useStyles();

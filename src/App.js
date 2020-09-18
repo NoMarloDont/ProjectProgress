@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SignIn from './components/SignIn/SignIn';
 import SignUp from './components/SignUp/SignUp';
+import Navbar from './components/Navbar/Navbar';
 import { withFirebase } from './components/Firebase';
 import './App.css';
 import {
@@ -16,12 +17,18 @@ const App = (props) => {
       resp ? setAuthUser(resp) : setAuthUser(null);
       console.log(resp);
     }
-    props.firebase.auth.onAuthStateChanged(updateAuthUser);
+
+    const authStateChangeListener = props.firebase.auth.onAuthStateChanged(updateAuthUser);
+
+    return function cleanup () {
+      authStateChangeListener();
+    }
   });
 
   return (
     <Router>
       <div className="App">
+        <Navbar user={authUser}/>
         <Switch>
           <Route exact path="/signin">
             <SignIn />
