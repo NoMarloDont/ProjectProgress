@@ -2,25 +2,28 @@ import React, { useEffect, useState } from 'react';
 import SignIn from './components/SignIn/SignIn';
 import SignUp from './components/SignUp/SignUp';
 import Navbar from './components/Navbar/Navbar';
+import Projects from './components/Projects/Projects';
 import { withFirebase } from './components/Firebase';
 import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 
 const App = (props) => {
   const [authUser, setAuthUser] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    const updateAuthUser = (resp) => {
+    const authStateChangeListener = props.firebase.auth.onAuthStateChanged((resp) => {
       resp ? setAuthUser(resp) : setAuthUser(null);
+      setIsLoading(false);
       console.log(resp);
-    }
+    });
 
-    const authStateChangeListener = props.firebase.auth.onAuthStateChanged(updateAuthUser);
-
-    return function cleanup () {
+    return function cleanup() {
       authStateChangeListener();
     }
   });
@@ -28,17 +31,25 @@ const App = (props) => {
   return (
     <Router>
       <div className="App">
-        <Navbar user={authUser}/>
-        <Switch>
-          <Route exact path="/signin">
-            <SignIn />
-          </Route>
-          <Route exact path="/signup">
-            <SignUp />
-          </Route>
-        </Switch>
+        <Navbar user={authUser} />
+        {isLoading ? (<div style={{ marginTop: '300px', marginRight: '200px' }}>Loading ...</div>) : (
+          <Switch>
+            <Route exact path="/">
+              <Redirect to="/signin" />
+            </Route>
+            <Route exact path="/projects">
+              <Projects userId={authUser ? authUser.uid : null} />
+            </Route>
+            <Route path="/signin">
+              {authUser ? <Redirect to="/projects" /> : <SignIn />}
+            </Route>
+            <Route path="/signup">
+              {authUser ? <Redirect to="/projects" /> : <SignUp />}
+            </Route>
+          </Switch>
+        )}
       </div>
-    </Router>
+    </Router >
   );
 }
 
