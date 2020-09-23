@@ -36,7 +36,7 @@ const SignIn = (props) => {
 
     const handleSignIn = () => {
         props.firebase.signInUser(email, password).then(resp => {
-            alert("Signed in with " + resp);
+            
         }).catch(err => console.error(err));
     }
 

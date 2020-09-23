@@ -22,6 +22,7 @@ class Firebase {
     this.database = app.database();
   }
 
+  // Auth Functions
   createUser = (email, password) => {
     this.auth.createUserWithEmailAndPassword(email, password).catch(err => console.error(err));
   }
@@ -37,6 +38,15 @@ class Firebase {
 
   // updatePassword = password =>
   //   this.auth.currentUser.updatePassword(password);
+
+  // Project Functions
+  getProjects = (userId) => {
+    const dbRef = this.database.ref("projects");
+
+    return dbRef.orderByChild("userId").equalTo(userId).once('value').then(snap => {
+      return snap.val();
+    });
+  }
 }
 
 export default Firebase;

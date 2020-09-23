@@ -20,7 +20,6 @@ const App = (props) => {
     const authStateChangeListener = props.firebase.auth.onAuthStateChanged((resp) => {
       resp ? setAuthUser(resp) : setAuthUser(null);
       setIsLoading(false);
-      console.log(resp);
     });
 
     return function cleanup() {
@@ -32,13 +31,16 @@ const App = (props) => {
     <Router>
       <div className="App">
         <Navbar user={authUser} />
-        {isLoading ? (<div style={{ marginTop: '300px', marginRight: '200px' }}>Loading ...</div>) : (
+        {isLoading ? (<div className="App__Loader">Loading ...</div>) : (
           <Switch>
             <Route exact path="/">
               <Redirect to="/signin" />
             </Route>
             <Route exact path="/projects">
-              <Projects userId={authUser ? authUser.uid : null} />
+              {authUser ? 
+                <Projects userId={authUser.uid} /> :
+                <Redirect to="/signin" />
+              }
             </Route>
             <Route path="/signin">
               {authUser ? <Redirect to="/projects" /> : <SignIn />}
