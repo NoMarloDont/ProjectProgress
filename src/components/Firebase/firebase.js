@@ -47,6 +47,12 @@ class Firebase {
       return snap.val();
     });
   }
+
+  createProject = (name, category) => {
+    console.log(`Submit Create Project Request: ${name}, ${category}`);
+
+    return Promise.resolve(true);
+  }
 }
 
 export default Firebase;

@@ -8,17 +8,27 @@ import './ProjectCard.css';
 
 const useStyles = makeStyles({
     root: {
-        width: 300,
-        height: 300,
+        marginLeft: '50%',
+        marginBottom: 24,
+        transform: 'translateX(-50%)',
+        width: 300
     },
     media: {
-        height: 140,
+        margin: '18px 18px 0 18px',
+        width: 266,
+        height: 200
     },
+    content: {
+        textAlign: 'center',
+        fontSize: 18
+    }
 });
 
 
 const ProjectCard = (props) => {
     const classes = useStyles();
+
+    console.log(props);
     return (
         <Card className={classes.root}>
             <CardActionArea>
@@ -27,7 +37,7 @@ const ProjectCard = (props) => {
                     image={props.projectImage}
                     title="Contemplative Marlo"
                 />
-                <CardContent>
+                <CardContent className={classes.content}>
                     {props.projectName}
                 </CardContent>
             </CardActionArea>
