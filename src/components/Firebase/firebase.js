@@ -48,10 +48,18 @@ class Firebase {
     });
   }
 
-  createProject = (name, category) => {
-    console.log(`Submit Create Project Request: ${name}, ${category}`);
+  createProject = (projectName, userId, category) => {
+    const dbRef = this.database.ref("projects");
+    return dbRef.push({ projectName: projectName, timeStamp: Date.now(), userId: userId, category: category });
+  }
 
-    return Promise.resolve(true);
+  getUpdates = (projectId) => {
+    const dbRef = this.database.ref("updates");
+
+    return dbRef.orderByChild("projectId").equalTo(projectId).once('value').then(snap => {
+      console.log(snap.val());
+      return snap.val();
+    });
   }
 }
 

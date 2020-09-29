@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 const Projects = (props) => {
     const [projects, setProjects] = useState();
     const [openAddProject, setOpenAddProject] = useState(false);
-    
+
     const classes = useStyles();
 
     useEffect(() => {
@@ -66,7 +66,7 @@ const Projects = (props) => {
                 <AddIcon />
             </Fab>
             <Modal open={openAddProject} handleClose={handleCloseAddProject}>
-                <AddProject />
+                <AddProject userId={props.userId} />
             </Modal>
         </div >
     );

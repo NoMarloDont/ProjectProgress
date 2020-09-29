@@ -3,6 +3,7 @@ import SignIn from './components/SignIn/SignIn';
 import SignUp from './components/SignUp/SignUp';
 import Navbar from './components/Navbar/Navbar';
 import Projects from './components/Projects/Projects';
+import Updates from './components/Updates/Updates';
 import { withFirebase } from './components/Firebase';
 import './App.css';
 import {
@@ -37,10 +38,13 @@ const App = (props) => {
               <Redirect to="/signin" />
             </Route>
             <Route exact path="/projects">
-              {authUser ? 
+              {authUser ?
                 <Projects userId={authUser.uid} /> :
                 <Redirect to="/signin" />
               }
+            </Route>
+            <Route path="/project/:projectId" >
+              {authUser ? <Updates userId={authUser.uid} /> : <SignIn />}
             </Route>
             <Route path="/signin">
               {authUser ? <Redirect to="/projects" /> : <SignIn />}

@@ -30,8 +30,8 @@ const AddProject = (props) => {
     }
 
     const handleCreateProject = () => {
-        props.firebase.createProject(name, category).then(resp => {
-            
+        props.firebase.createProject(name, props.userId, category).then(resp => {
+
         }).catch(err => console.error(err));
     }
 

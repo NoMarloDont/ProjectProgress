@@ -1,0 +1,12 @@
+.content {
+    width: 100%;
+    margin: 10px;
+}
+.content-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.content-description {
+    margin-top: 50px;
+}
