@@ -9,4 +9,6 @@
 
 .content-description {
     margin-top: 50px;
+    position: absolute;
+    bottom: 10px;
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import Modal from '../Modal/Modal';
@@ -15,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
         flex: 1
     },
     fab: {
-        position: 'absolute',
+        position: 'fixed',
         bottom: 18,
         right: 18
     }
@@ -24,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 const Projects = (props) => {
     const [projects, setProjects] = useState();
     const [openAddProject, setOpenAddProject] = useState(false);
+    const history = useHistory();
 
     const classes = useStyles();
 
@@ -41,13 +43,20 @@ const Projects = (props) => {
         setOpenAddProject(false);
     };
 
+    const handleSelectProject = (projectId) => {
+        history.push(`/project/${projectId}`);
+    };
+
     let projectList;
     if (projects) {
         projectList = Object.keys(projects).map((key) =>
             <Grid item xs={12} sm={6} md={4} key={key}>
-                <ProjectCard projectName={projects[key].projectName}
+                <ProjectCard
+                    onClick={() => handleSelectProject(key)}
+                    projectName={projects[key].projectName}
                     projectImage={projects[key].projectImage ? projects[key].projectImage
-                        : "/static/images/guitarMarlo.jpg"} />
+                        : "/static/images/guitarMarlo.jpg"}
+                 />
             </Grid>
         );
     }
@@ -63,7 +72,7 @@ const Projects = (props) => {
                 {projectList}
             </Grid >
             <Fab aria-label='Add' className={classes.fab} color='primary' onClick={handleAddProject}>
-                <AddIcon />
+            <AddIcon />
             </Fab>
             <Modal open={openAddProject} handleClose={handleCloseAddProject}>
                 <AddProject userId={props.userId} />

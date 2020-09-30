@@ -13,11 +13,14 @@ const useStyles = makeStyles({
         marginBottom: 24,
         transform: 'translateX(-50%)',
         width: '85vw',
-        height: '15vw',
-        display: 'flex'
+        minWidth: 320,
+        height: 112,
+        display: 'flex',
+        position: 'relative'
     },
     media: {
-        width: 150
+        width: 150,
+        height: 'auto'
     },
     content: {
         textAlign: 'center',
@@ -28,6 +31,8 @@ const useStyles = makeStyles({
 
 const UpdateCard = (props) => {
     const classes = useStyles();
+
+    const updateDate = new Date(props.updateDate);
     return (
         <Card className={classes.root}>
             <CardMedia
@@ -41,7 +46,7 @@ const UpdateCard = (props) => {
                         {props.updateTitle}
                     </div>
                     <div className="header-date">
-                        {props.updateDate}
+                        {updateDate.toLocaleDateString("en-US")}
                     </div>
                 </div>
                 <div className="content-description">

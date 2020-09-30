@@ -28,9 +28,8 @@ const useStyles = makeStyles({
 const ProjectCard = (props) => {
     const classes = useStyles();
 
-    console.log(props);
     return (
-        <Card className={classes.root}>
+        <Card className={classes.root} onClick={props.onClick}>
             <CardActionArea>
                 <CardMedia
                     className={classes.media}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { withFirebase } from '../Firebase';
-import { classes } from './AddProject.css';
+import { classes } from './AddUpdate.css';
 import { makeStyles } from '@material-ui/core/styles';
 
 import TextField from '@material-ui/core/TextField';
@@ -17,39 +17,53 @@ const useStyles = makeStyles({
     }
 });
 
-const AddProject = (props) => {
-    const [name, setName] = useState();
+const AddUpdate = (props) => {
+    const [title, setTitle] = useState();
+    const [description, setDescription] = useState();
     const [category, setCategory] = useState();
 
-    const nameChangedHandler = (event) => {
-        setName(event.target.value)
+    const titleChangedHandler = (event) => {
+        setTitle(event.target.value)
+    }
+
+    const descriptionChangedHandler = (event) => {
+        setDescription(event.target.value)
     }
 
     const categoryChangedHandler = (event) => {
         setCategory(event.target.value)
     }
 
-    const handleCreateProject = () => {
-        props.firebase.createProject(name, props.userId, category).then(resp => {
-
+    const handleCreateUpdate = () => {
+        props.firebase.createUpdate(title, description, category, props.projectId).then(resp => {
+            props.handleClose();
+            props.getUpdates();
         }).catch(err => console.error(err));
     }
 
     const classes = useStyles();
-    let isDisabled = !(name && category);
+    let isDisabled = !(title && description && category);
     return (
-        <div className="add-project__container">
-            <div className="add-project__title">
-                Create Project
+        <div className="add-update__container">
+            <div className="add-update__title">
+                Create Update
             </div>
-            <form className={classes.root + ' add-project__form'}>
+            <form className={classes.root + ' add-update__form'}>
                 <TextField
                     type="text"
-                    id="name"
-                    label="Name"
+                    id="title"
+                    label="Title"
                     variant="outlined"
                     size="small"
-                    onChange={nameChangedHandler}
+                    onChange={titleChangedHandler}
+                />
+                <TextField
+                    type="text"
+                    id="description"
+                    label="Description"
+                    variant="outlined"
+                    size="small"
+                    onChange={descriptionChangedHandler}
                 />
                 <TextField
                     type="text"
@@ -62,7 +76,7 @@ const AddProject = (props) => {
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={handleCreateProject}
+                    onClick={handleCreateUpdate}
                     disabled={isDisabled}
                 >
                     Create
@@ -72,4 +86,4 @@ const AddProject = (props) => {
     );
 }
 
-export default withFirebase(AddProject);
+export default withFirebase(AddUpdate);

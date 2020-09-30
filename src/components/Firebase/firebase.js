@@ -57,9 +57,14 @@ class Firebase {
     const dbRef = this.database.ref("updates");
 
     return dbRef.orderByChild("projectId").equalTo(projectId).once('value').then(snap => {
-      console.log(snap.val());
       return snap.val();
     });
+  }
+
+  createUpdate = (title, description, category, projectId) => {
+    const dbRef = this.database.ref("updates");
+
+    return dbRef.push({ title, description, projectId, timestamp: Date.now() });
   }
 }
 
