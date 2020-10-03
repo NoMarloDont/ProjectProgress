@@ -48,9 +48,17 @@ class Firebase {
     });
   }
 
-  createProject = (projectName, userId, category) => {
+  getProject = (projectId) => {
+    const dbRef = this.database.ref(`/projects/${projectId}`);
+    
+    return dbRef.once('value').then((snapshot) => {
+      return snapshot.val();
+    });
+  }
+
+  createProject = (projectName, userId, category, projectImage = null) => {
     const dbRef = this.database.ref("projects");
-    return dbRef.push({ projectName: projectName, timeStamp: Date.now(), userId: userId, category: category });
+    return dbRef.push({ projectName: projectName, timeStamp: Date.now(), userId: userId, category: category, projectImage: projectImage });
   }
 
   getUpdates = (projectId) => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { withFirebase } from '../Firebase';
-
 import { makeStyles } from '@material-ui/core/styles';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -23,6 +23,8 @@ const useStyles = makeStyles({
 });
 
 const Navbar = (props) => {
+    const history = useHistory();
+
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -41,6 +43,10 @@ const Navbar = (props) => {
         handleClose();
     };
 
+    const requestProjects = () => {
+        history.push(`/projects`);
+    }
+
     let avatar;
     if (props.user) {
         avatar = (
@@ -54,7 +60,7 @@ const Navbar = (props) => {
         <div className={classes.root}>
             <AppBar>
                 <Toolbar>
-                    <h4 className={classes.title}>Project Progress</h4>
+                    <h4 className={classes.title} onClick={requestProjects}>Project Progress</h4>
                     {avatar}
                     <Menu
                         id="menu-navbar"

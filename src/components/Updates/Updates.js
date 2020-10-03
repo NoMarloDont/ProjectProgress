@@ -23,12 +23,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Updates = (props) => {
+    const { projectId } = useParams();
+    const [project, setProject] = useState();
     const [updates, setUpdates] = useState();
     const [openAddUpdate, setOpenAddUpdate] = useState(false);
 
-    let { projectId } = useParams();
-
-    const classes = useStyles();
+    const getProject = (projectId) => {
+        props.firebase.getProject(projectId).then(val => {
+            console.log(val);
+            setProject(val);
+        })
+    }
 
     const getUpdates = () => {
         props.firebase.getUpdates(projectId).then(val => {
@@ -37,6 +42,7 @@ const Updates = (props) => {
     };
 
     useEffect(() => {
+        getProject(projectId);
         getUpdates();
     }, [projectId, props.firebase]);
 
@@ -62,8 +68,19 @@ const Updates = (props) => {
         );
     }
 
+    let projectTitle;
+    if (project) {
+        projectTitle = (
+            <div className="updates-list__title">
+                Placeholder User, Here is your progress on {project.projectName}
+            </div>
+        );
+    }
+
+    const classes = useStyles();
     return (
         <div className={classes.root + ' updates-list'}>
+            {projectTitle}
             <Grid
                 container
                 direction="column"

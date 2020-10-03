@@ -1,3 +1,9 @@
-.updates-list{
+.updates-list {
     margin-top: 64px;
+    text-align: center;
+}
+
+.updates-list__title {
+    font-size: 24px;
+    padding: 20px;
 }

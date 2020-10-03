@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { withFirebase } from '../Firebase';
 import { classes } from './AddProject.css';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,7 +12,8 @@ import Button from '@material-ui/core/Button';
 const useStyles = makeStyles({
     root: {
         '& .MuiTextField-root': {
-            margin: '5px'
+            margin: '5px',
+            minWidth: 300
         },
         '& .MuiButton-root': {
             margin: '5px'
@@ -22,6 +24,9 @@ const useStyles = makeStyles({
 const AddProject = (props) => {
     const [name, setName] = useState();
     const [category, setCategory] = useState();
+    const [photo, setPhoto] = useState();
+
+    const history = useHistory();
 
     const nameChangedHandler = (event) => {
         setName(event.target.value)
@@ -32,27 +37,45 @@ const AddProject = (props) => {
     }
 
     const handleCreateProject = () => {
-        props.firebase.createProject(name, props.userId, category).then(resp => {
-
+        props.firebase.createProject(name, props.userId, category, photo).then(resp => {
+            console.log(resp);
+            history.push(`/project/${resp.path.pieces_[1]}`);
         }).catch(err => console.error(err));
     }
 
     const beginUpload = (event) => {
         event.preventDefault();
+
         const uploadOptions = {
             cloudName: "dpzfuel4y",
             tags: ['image', 'anImage'],
-            uploadPreset: "lt0svpvk"
+            uploadPreset: "lt0svpvk",
+            multiple: false
         };
+
         openUploadWidget(uploadOptions, (error, photos) => {
             if (!error) {
+                if (photos.event === "queues-end") {
+                    setPhoto(photos.data.info.files[0].uploadInfo.url);
+                }
                 console.log(photos);
             } else {
                 console.log(error);
             }
         })
-        //path to url event:queues-end -> data -> info -> files -> 'the file object' -> upload info -> url
     };
+
+    let uploadedImage = (
+        <div>
+            No Photo Uploaded
+        </div>
+    );
+
+    if (photo) {
+        uploadedImage = (
+            <img className="add-project__image-preview" src={photo} alt="" />
+        )
+    }
 
     const classes = useStyles();
     let isDisabled = !(name && category);
@@ -82,18 +105,20 @@ const AddProject = (props) => {
                     <Button
                         variant="contained"
                         color="primary"
+                        onClick={beginUpload}
+                        disabled={!!photo}
+                    >
+                        Upload Image
+                    </Button>
+                    {uploadedImage}
+                    <Button
+                        variant="contained"
+                        color="primary"
                         onClick={handleCreateProject}
                         disabled={isDisabled}
                     >
                         Create
-                </Button>
-                    <button
-                        variant="contained"
-                        color="primary"
-                        onClick={beginUpload}
-                    >
-                        Upload Image
-                </button>
+                    </Button>
                 </form>
             </div>
         </CloudinaryContext>
