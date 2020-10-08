@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { withFirebase } from '../Firebase';
 import { classes } from './AddProject.css';
 import { makeStyles } from '@material-ui/core/styles';
-import { CloudinaryContext } from "cloudinary-react";
 import { openUploadWidget } from '../../utils/CloudinaryService';
 
 import TextField from '@material-ui/core/TextField';
@@ -58,7 +57,6 @@ const AddProject = (props) => {
                 if (photos.event === "queues-end") {
                     setPhoto(photos.data.info.files[0].uploadInfo.url);
                 }
-                console.log(photos);
             } else {
                 console.log(error);
             }
@@ -80,7 +78,7 @@ const AddProject = (props) => {
     const classes = useStyles();
     let isDisabled = !(name && category);
     return (
-        <CloudinaryContext cloudName="dpzfuel4y">
+        <div>
             <div className="add-project__container">
                 <div className="add-project__title">
                     Create Project
@@ -121,7 +119,7 @@ const AddProject = (props) => {
                     </Button>
                 </form>
             </div>
-        </CloudinaryContext>
+        </div>
     );
 }
 

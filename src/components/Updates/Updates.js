@@ -59,7 +59,7 @@ const Updates = (props) => {
         updateList = Object.keys(updates).map((key) =>
             <Grid item xs={12} key={key}>
                 <UpdateCard updateTitle={updates[key].title}
-                    updateImage={updates[key].image ? updates[key].image
+                    updateImage={updates[key].updateImage ? updates[key].updateImage
                         : "/static/images/guitarMarlo.jpg"}
                     updateDate={updates[key].timestamp}
                     updateDescription={updates[key].description}
@@ -93,7 +93,7 @@ const Updates = (props) => {
                 <AddIcon />
             </Fab>
             <Modal open={openAddUpdate} handleClose={handleCloseAddUpdate}>
-                <AddUpdate projectId={projectId} handleClose={handleCloseAddUpdate} getUpdates={getUpdates}/>
+                <AddUpdate projectId={projectId} handleClose={handleCloseAddUpdate} getUpdates={getUpdates} />
             </Modal>
         </div >
     );

@@ -50,7 +50,7 @@ class Firebase {
 
   getProject = (projectId) => {
     const dbRef = this.database.ref(`/projects/${projectId}`);
-    
+
     return dbRef.once('value').then((snapshot) => {
       return snapshot.val();
     });
@@ -69,10 +69,10 @@ class Firebase {
     });
   }
 
-  createUpdate = (title, description, category, projectId) => {
+  createUpdate = (title, description, category, projectId, updateImage) => {
     const dbRef = this.database.ref("updates");
 
-    return dbRef.push({ title, description, projectId, timestamp: Date.now() });
+    return dbRef.push({ title, description, projectId, timestamp: Date.now(), updateImage: updateImage });
   }
 }
 

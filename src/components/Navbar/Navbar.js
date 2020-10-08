@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { withFirebase } from '../Firebase';
 import { makeStyles } from '@material-ui/core/styles';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
@@ -24,11 +25,17 @@ const useStyles = makeStyles({
 
 const Navbar = (props) => {
     const history = useHistory();
+    let location = useLocation();
 
     const [anchorEl, setAnchorEl] = useState(null);
+    const [pathName, setPathName] = useState();
     const open = Boolean(anchorEl);
 
     const classes = useStyles();
+
+    useEffect(() => {
+        setPathName(location.pathname.split('/'));
+    }, [location.pathname]);
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -47,6 +54,11 @@ const Navbar = (props) => {
         history.push(`/projects`);
     }
 
+    let navBarTitle = 'Project Progress';
+    if (pathName?.[1] === 'project') {
+        navBarTitle = <ArrowBackIcon />
+    }
+
     let avatar;
     if (props.user) {
         avatar = (
@@ -60,7 +72,7 @@ const Navbar = (props) => {
         <div className={classes.root}>
             <AppBar>
                 <Toolbar>
-                    <h4 className={classes.title} onClick={requestProjects}>Project Progress</h4>
+                    <h4 className={classes.title} onClick={requestProjects}>{navBarTitle}</h4>
                     {avatar}
                     <Menu
                         id="menu-navbar"
