@@ -55,7 +55,7 @@ const SignIn = (props) => {
                     onChange={emailChangedHandler}
                 />
                 <TextField
-                    type="text"
+                    type="password"
                     id="password"
                     label="Password"
                     variant="outlined"

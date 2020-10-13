@@ -22,11 +22,16 @@ const useStyles = makeStyles({
 
 const SignUp = (props) => {
     const [email, setEmail] = useState();
+    const [name, setName] = useState();
     const [password, setPassword] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
 
     const emailChangedHandler = (event) => {
         setEmail(event.target.value);
+    }
+
+    const nameChangedHandler = (event) => {
+        setName(event.target.value);
     }
 
     const passwordChangedHandler = (event) => {
@@ -40,7 +45,7 @@ const SignUp = (props) => {
     let isDisabled = !(email && password && password === confirmPassword);
 
     const handleSignUp = () => {
-        props.firebase.createUser(email, password);
+        props.firebase.createUser(email, password, name);
     }
 
     const classes = useStyles();
@@ -59,6 +64,14 @@ const SignUp = (props) => {
                 />
                 <TextField
                     type="text"
+                    id="name"
+                    label="Username"
+                    variant="outlined"
+                    size="small"
+                    onChange={nameChangedHandler}
+                />
+                <TextField
+                    type="password"
                     id="password"
                     label="Password"
                     variant="outlined"
@@ -66,7 +79,7 @@ const SignUp = (props) => {
                     onChange={passwordChangedHandler}
                 />
                 <TextField
-                    type="text"
+                    type="password"
                     id="confirmPassword"
                     label="Confirm Password"
                     variant="outlined"

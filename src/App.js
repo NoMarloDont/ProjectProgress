@@ -15,23 +15,41 @@ import {
 
 const App = (props) => {
   const [authUser, setAuthUser] = useState();
+  const [userProfile, setUserProfile] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const authStateChangeListener = props.firebase.auth.onAuthStateChanged((resp) => {
-      resp ? setAuthUser(resp) : setAuthUser(null);
+      if (resp) {
+        setAuthUser(resp);
+        getUserInfo(resp.uid);
+      } else {
+        clearUser();
+      }
+
       setIsLoading(false);
     });
 
     return function cleanup() {
       authStateChangeListener();
     }
-  });
+  }, []);
+
+  const getUserInfo = (uid) => {
+      props.firebase.getUserProfile(uid).then((resp) => {
+      setUserProfile(resp);
+    });
+  }
+
+  const clearUser = () => {
+    setAuthUser(null);
+    setUserProfile(null);
+  }
 
   return (
     <Router>
       <div className="App">
-        <Navbar user={authUser} />
+        <Navbar user={authUser} userName={userProfile?.name} getUserInfo={getUserInfo} />
         {isLoading ? (<div className="App__Loader">Loading ...</div>) : (
           <Switch>
             <Route exact path="/">
@@ -39,12 +57,15 @@ const App = (props) => {
             </Route>
             <Route exact path="/projects">
               {authUser ?
-                <Projects userId={authUser.uid} /> :
+                <Projects userId={authUser.uid} userName={userProfile?.name} /> :
                 <Redirect to="/signin" />
               }
             </Route>
             <Route path="/project/:projectId" >
-              {authUser ? <Updates userId={authUser.uid} /> : <SignIn />}
+              {authUser ? 
+                <Updates userId={authUser.uid} userName={userProfile?.name} /> :
+                <SignIn />
+              }
             </Route>
             <Route path="/signin">
               {authUser ? <Redirect to="/projects" /> : <SignIn />}
@@ -55,7 +76,7 @@ const App = (props) => {
           </Switch>
         )}
       </div>
-    </Router >
+    </Router>
   );
 }
 

@@ -23,8 +23,37 @@ class Firebase {
   }
 
   // Auth Functions
-  createUser = (email, password) => {
-    this.auth.createUserWithEmailAndPassword(email, password).catch(err => console.error(err));
+  createUser = (email, password, name) => {
+    this.auth.createUserWithEmailAndPassword(email, password).then((resp) => {
+      const uid = resp.user.uid;
+
+      this.createUserProfile(uid, name).catch(err => console.error(err));
+    }).catch(err => console.error(err));
+  }
+
+  createUserProfile = (userId, name) => {
+    const dbRef = this.database.ref("users");
+
+    return dbRef.child(userId).set({
+      name
+    });
+  }
+
+  editUserProfile = (userId, name) => {
+    const dbRef = this.database.ref("users");
+    const userRef = dbRef.child(userId);
+
+    return userRef.update({
+      name
+    });
+  }
+
+  getUserProfile = (userId) => {
+    const dbRef = this.database.ref(`/users/${userId}`);
+
+    return dbRef.once('value').then((snapshot) => {
+      return snapshot.val();
+    });
   }
 
   signInUser = (email, password) =>

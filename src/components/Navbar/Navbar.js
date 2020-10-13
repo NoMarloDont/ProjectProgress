@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { withFirebase } from '../Firebase';
 import { makeStyles } from '@material-ui/core/styles';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import PersonIcon from '@material-ui/icons/Person';
 import Toolbar from '@material-ui/core/Toolbar';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+
+import Modal from '../Modal/Modal';
+import EditProfile from '../EditProfile/EditProfile';
 
 const useStyles = makeStyles({
     root: {
@@ -29,6 +32,7 @@ const Navbar = (props) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [pathName, setPathName] = useState();
+    const [openEditProfile, setOpenEditProfile] = useState(false);
     const open = Boolean(anchorEl);
 
     const classes = useStyles();
@@ -36,6 +40,14 @@ const Navbar = (props) => {
     useEffect(() => {
         setPathName(location.pathname.split('/'));
     }, [location.pathname]);
+
+    const handleEditProfile = () => {
+        setOpenEditProfile(true);
+    };
+
+    const handleCloseEditProfile = () => {
+        setOpenEditProfile(false);
+    };
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -81,10 +93,14 @@ const Navbar = (props) => {
                         open={open}
                         onClose={handleClose}
                     >
+                        <MenuItem onClick={handleEditProfile}>Profile</MenuItem>
                         <MenuItem onClick={handleSignOut}>Log Out</MenuItem>
                     </Menu>
                 </Toolbar>
             </AppBar>
+            <Modal open={openEditProfile} handleClose={handleCloseEditProfile}>
+                <EditProfile user={props.user} name={props.userName} handleClose={handleCloseEditProfile} getUserInfo={props.getUserInfo} />
+            </Modal>
         </div>
     )
 }

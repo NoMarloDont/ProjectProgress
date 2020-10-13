@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
         flex: 1
     },
     fab: {
-        position: 'absolute',
+        position: 'fixed',
         bottom: 18,
         right: 18
     }
@@ -69,10 +69,10 @@ const Updates = (props) => {
     }
 
     let projectTitle;
-    if (project) {
+    if (project && props.userName) {
         projectTitle = (
             <div className="updates-list__title">
-                Placeholder User, Here is your progress on {project.projectName}
+                Hi {props.userName}, here is your progress on {project.projectName}
             </div>
         );
     }

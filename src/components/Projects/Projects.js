@@ -61,8 +61,18 @@ const Projects = (props) => {
         );
     }
 
+    let projectsTitle;
+    if (props.userName) {
+        projectsTitle = (
+            <div className="updates-list__title">
+                Hi {props.userName}, here are your projects
+            </div>
+        );
+    }
+
     return (
         <div className={classes.root + ' project-list'}>
+            {projectsTitle}
             <Grid
                 container
                 direction="row"
@@ -72,7 +82,7 @@ const Projects = (props) => {
                 {projectList}
             </Grid >
             <Fab aria-label='Add' className={classes.fab} color='primary' onClick={handleAddProject}>
-            <AddIcon />
+                <AddIcon />
             </Fab>
             <Modal open={openAddProject} handleClose={handleCloseAddProject}>
                 <AddProject userId={props.userId} />
