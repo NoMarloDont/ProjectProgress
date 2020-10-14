@@ -1,0 +1,17 @@
+.projectCardName {
+    width: 100%;
+    text-align: center;
+}
+
+.projectCardSetting {
+    align-self: flex-end;
+}
+
+.projectCardSettings {
+    margin: 18px 18px 0 18px;
+    width: 266px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
