@@ -24,7 +24,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Projects = (props) => {
     const [projects, setProjects] = useState();
-    const [openAddProject, setOpenAddProject] = useState(false);
+    const [modal, setModal] = useState(false);
+    const [selectedProjectId, setSelectedProjectId] = useState(null);
+    const [modalContent, setModalContent] = useState();
     const history = useHistory();
 
     const classes = useStyles();
@@ -33,14 +35,17 @@ const Projects = (props) => {
         props.firebase.getProjects(props.userId).then(val => {
             setProjects(val);
         });
-    }, [props.userId, props.firebase]);
+    }, [props.userId, props.firebase, modal]);
 
-    const handleAddProject = () => {
-        setOpenAddProject(true);
-    };
+    const handleOpenModal = (projectId, modalContent) => {
+        setModal(true);
+        setSelectedProjectId(projectId);
 
-    const handleCloseAddProject = () => {
-        setOpenAddProject(false);
+        setModalContent(modalContent)
+    }
+
+    const handleCloseModal = (onSubmit) => {
+        setModal(false, () => setSelectedProjectId(null));
     };
 
     const handleSelectProject = (projectId) => {
@@ -53,9 +58,14 @@ const Projects = (props) => {
             <Grid item xs={12} sm={6} md={4} key={key}>
                 <ProjectCard
                     onClick={() => handleSelectProject(key)}
+                    handleOpenModal={handleOpenModal}
+                    handleCloseModal={handleCloseModal}
                     projectName={projects[key].projectName}
                     projectImage={projects[key].projectImage ? projects[key].projectImage
                         : "/static/images/guitarMarlo.jpg"}
+                    projectKey={key}
+                    project={projects[key]}
+                    userId={props.userId}
                  />
             </Grid>
         );
@@ -70,6 +80,11 @@ const Projects = (props) => {
         );
     }
 
+
+    const defaultModalContent = (
+        <AddProject userId={props.userId} handleClose={handleCloseModal} />
+    );
+
     return (
         <div className={classes.root + ' project-list'}>
             {projectsTitle}
@@ -81,11 +96,11 @@ const Projects = (props) => {
             >
                 {projectList}
             </Grid >
-            <Fab aria-label='Add' className={classes.fab} color='primary' onClick={handleAddProject}>
+            <Fab aria-label='Add' className={classes.fab} color='primary' onClick={() => handleOpenModal(null, defaultModalContent)}>
                 <AddIcon />
             </Fab>
-            <Modal open={openAddProject} handleClose={handleCloseAddProject}>
-                <AddProject userId={props.userId} />
+            <Modal open={modal} handleClose={handleCloseModal}>
+                {modalContent}
             </Modal>
         </div >
     );

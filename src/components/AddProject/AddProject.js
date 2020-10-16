@@ -21,9 +21,9 @@ const useStyles = makeStyles({
 });
 
 const AddProject = (props) => {
-    const [name, setName] = useState();
-    const [category, setCategory] = useState();
-    const [photo, setPhoto] = useState();
+    const [name, setName] = useState(props.project?.projectName);
+    const [category, setCategory] = useState(props.project?.category);
+    const [photo, setPhoto] = useState(props.project?.projectImage);
 
     const history = useHistory();
 
@@ -37,8 +37,14 @@ const AddProject = (props) => {
 
     const handleCreateProject = () => {
         props.firebase.createProject(name, props.userId, category, photo).then(resp => {
-            console.log(resp);
             history.push(`/project/${resp.path.pieces_[1]}`);
+        }).catch(err => console.error(err));
+    }
+
+    const handleEditProject = () => {
+        props.firebase.editProject(name, props.userId, category, photo, props.projectId).then(resp => {
+            props.handleClose();
+            props.handleCloseSettings();
         }).catch(err => console.error(err));
     }
 
@@ -81,7 +87,7 @@ const AddProject = (props) => {
         <div>
             <div className="add-project__container">
                 <div className="add-project__title">
-                    Create Project
+                    {props.project ? "Edit Project" : "Create Project"}
             </div>
                 <form className={classes.root + ' add-project__form'}>
                     <TextField
@@ -91,6 +97,7 @@ const AddProject = (props) => {
                         variant="outlined"
                         size="small"
                         onChange={nameChangedHandler}
+                        value={name}
                     />
                     <TextField
                         type="text"
@@ -99,12 +106,12 @@ const AddProject = (props) => {
                         variant="outlined"
                         size="small"
                         onChange={categoryChangedHandler}
+                        value={category}
                     />
                     <Button
                         variant="contained"
                         color="primary"
                         onClick={beginUpload}
-                        disabled={!!photo}
                     >
                         Upload Image
                     </Button>
@@ -112,10 +119,10 @@ const AddProject = (props) => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleCreateProject}
+                        onClick={props.project ? handleEditProject : handleCreateProject}
                         disabled={isDisabled}
                     >
-                        Create
+                        {props.project ? "Edit" : "Create"}
                     </Button>
                 </form>
             </div>

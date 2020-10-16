@@ -90,6 +90,11 @@ class Firebase {
     return dbRef.push({ projectName: projectName, timeStamp: Date.now(), userId: userId, category: category, projectImage: projectImage });
   }
 
+  editProject = (projectName, userId, category, projectImage = null, projectId) => {
+    const dbRef = this.database.ref("projects");
+    return dbRef.child(projectId).update({ projectName: projectName, timeStamp: Date.now(), userId: userId, category: category, projectImage: projectImage });
+  }
+
   getUpdates = (projectId) => {
     const dbRef = this.database.ref("updates");
 

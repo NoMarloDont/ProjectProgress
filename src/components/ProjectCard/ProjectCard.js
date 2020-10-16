@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import AddProject from '../AddProject/AddProject';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -45,6 +48,10 @@ const ProjectCard = (props) => {
         setShowSettings(!showSettings);
     };
 
+    const modalContent = (
+        <AddProject userId={props.userId} project={props.project} projectId={props.projectKey} handleClose={props.handleCloseModal} handleCloseSettings={handleShowSettings} />
+    )
+
     const projectCard = (
         <div>
             <CardActionArea onClick={props.onClick}>
@@ -71,6 +78,7 @@ const ProjectCard = (props) => {
                 <Button
                     variant="contained"
                     color="primary"
+                    onClick={() => props.handleOpenModal(props.projectKey, modalContent)}
                 >
                     Edit
                 </Button>
