@@ -95,6 +95,12 @@ class Firebase {
     return dbRef.child(projectId).update({ projectName: projectName, timeStamp: Date.now(), userId: userId, category: category, projectImage: projectImage });
   }
 
+  deleteProject = (projectId) => {
+    const dbRef = this.database.ref("projects");
+    return dbRef.child(projectId).remove();
+  }
+
+
   getUpdates = (projectId) => {
     const dbRef = this.database.ref("updates");
 

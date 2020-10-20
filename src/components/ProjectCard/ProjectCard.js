@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import AddProject from '../AddProject/AddProject';
+import DeleteProject from '../DeleteProject/DeleteProject';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -48,9 +49,14 @@ const ProjectCard = (props) => {
         setShowSettings(!showSettings);
     };
 
-    const modalContent = (
+    const editModalContent = (
         <AddProject userId={props.userId} project={props.project} projectId={props.projectKey} handleClose={props.handleCloseModal} handleCloseSettings={handleShowSettings} />
     )
+
+    const deleteModalContent = (
+        <DeleteProject userId={props.userId} project={props.project} projectId={props.projectKey} handleClose={props.handleCloseModal} handleCloseSettings={handleShowSettings} />
+    )
+
 
     const projectCard = (
         <div>
@@ -78,13 +84,14 @@ const ProjectCard = (props) => {
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => props.handleOpenModal(props.projectKey, modalContent)}
+                    onClick={() => props.handleOpenModal(editModalContent)}
                 >
                     Edit
                 </Button>
                 <Button
                     variant="contained"
                     color="secondary"
+                    onClick={() => props.handleOpenModal(deleteModalContent)}
                 >
                     Delete
                 </Button>

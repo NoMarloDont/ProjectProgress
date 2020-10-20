@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
 const Projects = (props) => {
     const [projects, setProjects] = useState();
     const [modal, setModal] = useState(false);
-    const [selectedProjectId, setSelectedProjectId] = useState(null);
     const [modalContent, setModalContent] = useState();
     const history = useHistory();
 
@@ -37,15 +36,13 @@ const Projects = (props) => {
         });
     }, [props.userId, props.firebase, modal]);
 
-    const handleOpenModal = (projectId, modalContent) => {
+    const handleOpenModal = (modalContent) => {
         setModal(true);
-        setSelectedProjectId(projectId);
+        setModalContent(modalContent);
+    };
 
-        setModalContent(modalContent)
-    }
-
-    const handleCloseModal = (onSubmit) => {
-        setModal(false, () => setSelectedProjectId(null));
+    const handleCloseModal = () => {
+        setModal(false);
     };
 
     const handleSelectProject = (projectId) => {
@@ -66,7 +63,7 @@ const Projects = (props) => {
                     projectKey={key}
                     project={projects[key]}
                     userId={props.userId}
-                 />
+                />
             </Grid>
         );
     }
