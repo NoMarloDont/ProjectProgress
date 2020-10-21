@@ -77,7 +77,6 @@ const Projects = (props) => {
         );
     }
 
-
     const defaultModalContent = (
         <AddProject userId={props.userId} handleClose={handleCloseModal} />
     );
@@ -93,7 +92,7 @@ const Projects = (props) => {
             >
                 {projectList}
             </Grid >
-            <Fab aria-label='Add' className={classes.fab} color='primary' onClick={() => handleOpenModal(null, defaultModalContent)}>
+            <Fab aria-label='Add' className={classes.fab} color='primary' onClick={() => handleOpenModal(defaultModalContent)}>
                 <AddIcon />
             </Fab>
             <Modal open={modal} handleClose={handleCloseModal}>

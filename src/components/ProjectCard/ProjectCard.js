@@ -40,7 +40,6 @@ const useStyles = makeStyles({
     }
 });
 
-
 const ProjectCard = (props) => {
     const classes = useStyles();
     const [showSettings, setShowSettings] = useState(false);
@@ -54,9 +53,8 @@ const ProjectCard = (props) => {
     )
 
     const deleteModalContent = (
-        <DeleteProject userId={props.userId} project={props.project} projectId={props.projectKey} handleClose={props.handleCloseModal} handleCloseSettings={handleShowSettings} />
+        <DeleteProject project={props.project} projectId={props.projectKey} handleClose={props.handleCloseModal} />
     )
-
 
     const projectCard = (
         <div>

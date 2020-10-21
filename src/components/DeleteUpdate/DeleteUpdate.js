@@ -1,6 +1,6 @@
 import React from 'react';
 import { withFirebase } from '../Firebase';
-import './DeleteProject.css';
+import './DeleteUpdate.css';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
@@ -17,14 +17,14 @@ const useStyles = makeStyles({
     }
 });
 
-const DeleteProject = (props) => {
-    const handleDeleteProject = () => {
-        props.firebase.deleteProject(props.projectId).then(resp => {
+const DeleteUpdate = (props) => {
+    const handleDeleteUpdate = () => {
+        props.firebase.deleteUpdate(props.updateId).then(resp => {
             props.handleClose();
         }).catch(err => console.error(err));
     }
 
-    const handleDoNotDeleteProject = () => {
+    const handleDoNotDeleteUpdate = () => {
         props.handleClose();
     }
 
@@ -33,21 +33,21 @@ const DeleteProject = (props) => {
         <div>
             <div className="add-project__container">
                 <div className="add-project__title">
-                    Are you sure you want to delete this project?
+                    Are you sure you want to delete this update?
                 </div>
                 <form className={classes.root + ' add-project__form'}>
 
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleDeleteProject}
+                        onClick={handleDeleteUpdate}
                     >
                         Yes
                     </Button>
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleDoNotDeleteProject}
+                        onClick={handleDoNotDeleteUpdate}
                     >
                         No
                     </Button>
@@ -57,4 +57,4 @@ const DeleteProject = (props) => {
     );
 }
 
-export default withFirebase(DeleteProject);
+export default withFirebase(DeleteUpdate);

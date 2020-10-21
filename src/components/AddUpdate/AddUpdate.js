@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { withFirebase } from '../Firebase';
-import { classes } from './AddUpdate.css';
+import './AddUpdate.css';
 import { makeStyles } from '@material-ui/core/styles';
 import { openUploadWidget } from '../../utils/CloudinaryService';
 
@@ -19,10 +19,10 @@ const useStyles = makeStyles({
 });
 
 const AddUpdate = (props) => {
-    const [title, setTitle] = useState();
-    const [description, setDescription] = useState();
-    const [category, setCategory] = useState();
-    const [photo, setPhoto] = useState();
+    const [title, setTitle] = useState(props.update?.title);
+    const [description, setDescription] = useState(props.update?.description);
+    const [category, setCategory] = useState(props.update?.category);
+    const [photo, setPhoto] = useState(props.update?.updateImage);
 
     const titleChangedHandler = (event) => {
         setTitle(event.target.value)
@@ -39,6 +39,14 @@ const AddUpdate = (props) => {
     const handleCreateUpdate = () => {
         props.firebase.createUpdate(title, description, category, props.projectId, photo).then(resp => {
             props.handleClose();
+            props.getUpdates();
+        }).catch(err => console.error(err));
+    }
+
+    const handleEditUpdate = () => {
+        props.firebase.editUpdate(props.updateId, title, description, category, photo).then(resp => {
+            props.handleClose();
+            props.handleShowSettings();
             props.getUpdates();
         }).catch(err => console.error(err));
     }
@@ -81,7 +89,7 @@ const AddUpdate = (props) => {
     return (
         <div className="add-update__container">
             <div className="add-update__title">
-                Create Update
+                {props.update ? 'Edit Update' : 'Create Update'}
             </div>
             <form className={classes.root + ' add-update__form'}>
                 <TextField
@@ -91,6 +99,7 @@ const AddUpdate = (props) => {
                     variant="outlined"
                     size="small"
                     onChange={titleChangedHandler}
+                    value={title}
                 />
                 <TextField
                     type="text"
@@ -99,6 +108,7 @@ const AddUpdate = (props) => {
                     variant="outlined"
                     size="small"
                     onChange={descriptionChangedHandler}
+                    value={description}
                 />
                 <TextField
                     type="text"
@@ -107,13 +117,14 @@ const AddUpdate = (props) => {
                     variant="outlined"
                     size="small"
                     onChange={categoryChangedHandler}
+                    value={category}
                 />
 
                 <Button
                     variant="contained"
                     color="primary"
                     onClick={beginUpload}
-                    disabled={!!photo}
+                    value={photo}
                 >
                     Upload Image
                 </Button>
@@ -121,7 +132,7 @@ const AddUpdate = (props) => {
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={handleCreateUpdate}
+                    onClick={props.update ? handleEditUpdate : handleCreateUpdate}
                     disabled={isDisabled}
                 >
                     Create

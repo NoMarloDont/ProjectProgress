@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+
+import AddUpdate from '../AddUpdate/AddUpdate';
+import DeleteUpdate from '../DeleteUpdate/DeleteUpdate';
+
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
+
 import './UpdateCard.css';
 
 const useStyles = makeStyles({
@@ -43,13 +48,27 @@ const useStyles = makeStyles({
 const UpdateCard = (props) => {
     const classes = useStyles();
 
-    const updateDate = new Date(props.updateDate);
+    const updateDate = new Date(props.update.timestamp);
     const [showSettings, setShowSettings] = useState(false);
-
 
     const handleShowSettings = () => {
         setShowSettings(!showSettings);
     };
+
+    const editModalContent = (
+        <AddUpdate 
+            projectId={props.projectId}
+            updateId={props.updateId}
+            update={props.update}  
+            handleClose={props.handleCloseModal}
+            handleShowSettings={handleShowSettings}
+            getUpdates={props.getUpdates}
+        />
+    )
+
+    const deleteModalContent = (
+        <DeleteUpdate updateId={props.updateId} handleClose={props.handleCloseModal} />
+    )
 
     const settingsCard = (
         <div class="content">
@@ -60,14 +79,14 @@ const UpdateCard = (props) => {
                 <Button
                     variant="contained"
                     color="primary"
-                // onClick={() => props.handleOpenModal(editModalContent)}
+                onClick={() => props.handleOpenModal(editModalContent)}
                 >
                     Edit
                 </Button>
                 <Button
                     variant="contained"
                     color="secondary"
-                // onClick={() => props.handleOpenModal(deleteModalContent)}
+                onClick={() => props.handleOpenModal(deleteModalContent)}
                 >
                     Delete
                 </Button>
@@ -79,13 +98,13 @@ const UpdateCard = (props) => {
         <React.Fragment>
             <CardMedia
                 className={classes.media}
-                image={props.updateImage}
-                title="Contemplative Marlo"
+                image={props.update.updateImage ? props.update.updateImage : "/static/images/guitarMarlo.jpg"}
+                title="Update Image"
             />
             <div className="content">
                 <div className="content-header">
                     <div className="header-title">
-                        {props.updateTitle}
+                        {props.update.title}
                     </div>
                     <div className="date-and-settings">
                         <span>
@@ -96,7 +115,7 @@ const UpdateCard = (props) => {
                 </div>
 
                 <div className="content-description">
-                    {props.updateDescription}
+                    {props.update.description}
                 </div>
             </div>
         </React.Fragment>

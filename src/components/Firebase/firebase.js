@@ -100,7 +100,6 @@ class Firebase {
     return dbRef.child(projectId).remove();
   }
 
-
   getUpdates = (projectId) => {
     const dbRef = this.database.ref("updates");
 
@@ -112,7 +111,18 @@ class Firebase {
   createUpdate = (title, description, category, projectId, updateImage) => {
     const dbRef = this.database.ref("updates");
 
-    return dbRef.push({ title, description, projectId, timestamp: Date.now(), updateImage: updateImage });
+    return dbRef.push({ title, description, category, projectId, timestamp: Date.now(), updateImage: updateImage });
+  }
+
+  editUpdate = (updateId, title, description, category, updateImage) => {
+    const dbRef = this.database.ref("updates");
+
+    return dbRef.child(updateId).update({ title, description, category, updateImage: updateImage });
+  }
+
+  deleteUpdate = (updateId) => {
+    const dbRef = this.database.ref("updates");
+    return dbRef.child(updateId).remove();
   }
 }
 
