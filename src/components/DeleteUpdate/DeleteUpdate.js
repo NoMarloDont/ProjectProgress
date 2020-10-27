@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { withFirebase } from '../Firebase';
 import './DeleteUpdate.css';
 import { makeStyles } from '@material-ui/core/styles';
-
+import { UIContext } from '../UIContext';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
@@ -18,14 +18,16 @@ const useStyles = makeStyles({
 });
 
 const DeleteUpdate = (props) => {
+    const UI = useContext(UIContext);
     const handleDeleteUpdate = () => {
         props.firebase.deleteUpdate(props.updateId).then(resp => {
-            props.handleClose();
+            props.getUpdates();
+            UI.handleModalClose();
         }).catch(err => console.error(err));
     }
 
     const handleDoNotDeleteUpdate = () => {
-        props.handleClose();
+        UI.handleModalClose();
     }
 
     const classes = useStyles();

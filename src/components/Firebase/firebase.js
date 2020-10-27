@@ -108,13 +108,12 @@ class Firebase {
     });
   }
 
-  createUpdate = (title, description, category, projectId, updateImage) => {
+  createUpdate = (title, description, category, projectId, updateImage = null) => {
     const dbRef = this.database.ref("updates");
-
     return dbRef.push({ title, description, category, projectId, timestamp: Date.now(), updateImage: updateImage });
   }
 
-  editUpdate = (updateId, title, description, category, updateImage) => {
+  editUpdate = (updateId, title, description, category, updateImage = null) => {
     const dbRef = this.database.ref("updates");
 
     return dbRef.child(updateId).update({ title, description, category, updateImage: updateImage });

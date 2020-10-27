@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import SignIn from './components/SignIn/SignIn';
 import SignUp from './components/SignUp/SignUp';
 import Navbar from './components/Navbar/Navbar';
 import Projects from './components/Projects/Projects';
 import Updates from './components/Updates/Updates';
+import Modal from './components/Modal/Modal';
 import { withFirebase } from './components/Firebase';
+import { UIContext } from './components/UIContext';
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -17,6 +19,7 @@ const App = (props) => {
   const [authUser, setAuthUser] = useState();
   const [userProfile, setUserProfile] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const UI = useContext(UIContext);
 
   useEffect(() => {
     const authStateChangeListener = props.firebase.auth.onAuthStateChanged((resp) => {
@@ -36,7 +39,7 @@ const App = (props) => {
   }, []);
 
   const getUserInfo = (uid) => {
-      props.firebase.getUserProfile(uid).then((resp) => {
+    props.firebase.getUserProfile(uid).then((resp) => {
       setUserProfile(resp);
     });
   }
@@ -62,7 +65,7 @@ const App = (props) => {
               }
             </Route>
             <Route path="/project/:projectId" >
-              {authUser ? 
+              {authUser ?
                 <Updates userId={authUser.uid} userName={userProfile?.name} /> :
                 <SignIn />
               }
@@ -75,6 +78,9 @@ const App = (props) => {
             </Route>
           </Switch>
         )}
+        <Modal open={!!UI.modalContent} handleClose={UI.handleModalClose}>
+          {UI.modalContent}
+        </Modal>
       </div>
     </Router>
   );

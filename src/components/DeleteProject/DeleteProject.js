@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { withFirebase } from '../Firebase';
 import './DeleteProject.css';
 import { makeStyles } from '@material-ui/core/styles';
-
+import { UIContext } from '../UIContext';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
@@ -18,14 +18,18 @@ const useStyles = makeStyles({
 });
 
 const DeleteProject = (props) => {
+
+    const UI = useContext(UIContext);
+
     const handleDeleteProject = () => {
         props.firebase.deleteProject(props.projectId).then(resp => {
-            props.handleClose();
+            props.handleProjectsReTrigger();
+            UI.handleModalClose();
         }).catch(err => console.error(err));
     }
 
     const handleDoNotDeleteProject = () => {
-        props.handleClose();
+        UI.handleModalClose();
     }
 
     const classes = useStyles();

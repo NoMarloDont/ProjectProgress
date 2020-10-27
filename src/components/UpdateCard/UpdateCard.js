@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-
 import AddUpdate from '../AddUpdate/AddUpdate';
 import DeleteUpdate from '../DeleteUpdate/DeleteUpdate';
-
+import { UIContext } from '../UIContext';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import SettingsIcon from '@material-ui/icons/Settings';
-import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 
 import './UpdateCard.css';
@@ -50,24 +48,24 @@ const UpdateCard = (props) => {
 
     const updateDate = new Date(props.update.timestamp);
     const [showSettings, setShowSettings] = useState(false);
+    const UI = useContext(UIContext);
 
     const handleShowSettings = () => {
         setShowSettings(!showSettings);
     };
 
     const editModalContent = (
-        <AddUpdate 
+        <AddUpdate
             projectId={props.projectId}
             updateId={props.updateId}
-            update={props.update}  
-            handleClose={props.handleCloseModal}
+            update={props.update}
             handleShowSettings={handleShowSettings}
             getUpdates={props.getUpdates}
         />
     )
 
     const deleteModalContent = (
-        <DeleteUpdate updateId={props.updateId} handleClose={props.handleCloseModal} />
+        <DeleteUpdate updateId={props.updateId} getUpdates={props.getUpdates} />
     )
 
     const settingsCard = (
@@ -79,14 +77,14 @@ const UpdateCard = (props) => {
                 <Button
                     variant="contained"
                     color="primary"
-                onClick={() => props.handleOpenModal(editModalContent)}
+                    onClick={() => UI.setModalContent(editModalContent)}
                 >
                     Edit
                 </Button>
                 <Button
                     variant="contained"
                     color="secondary"
-                onClick={() => props.handleOpenModal(deleteModalContent)}
+                    onClick={() => UI.setModalContent(deleteModalContent)}
                 >
                     Delete
                 </Button>

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import UpdateCard from '../UpdateCard/UpdateCard';
-import Modal from '../Modal/Modal';
 import AddUpdate from '../AddUpdate/AddUpdate';
 import { Grid } from '@material-ui/core';
 import { withFirebase } from '../Firebase';
 import { useParams } from 'react-router-dom';
+import { UIContext } from '../UIContext';
 import './Updates.css';
 
 import Fab from '@material-ui/core/Fab';
@@ -26,42 +26,31 @@ const Updates = (props) => {
     const { projectId } = useParams();
     const [project, setProject] = useState();
     const [updates, setUpdates] = useState();
-    const [modal, setModal] = useState(false);
-    const [modalContent, setModalContent] = useState();
 
-    const getProject = (projectId) => {
+    const UI = useContext(UIContext);
+
+    const getProject = useCallback((projectId) => {
         props.firebase.getProject(projectId).then(val => {
             setProject(val);
         })
-    }
+    }, [props.firebase]);
 
-    const getUpdates = () => {
+    const getUpdates = useCallback(() => {
         props.firebase.getUpdates(projectId).then(val => {
             setUpdates(val);
         });
-    };
+    }, [projectId, props.firebase]);
 
     useEffect(() => {
         getProject(projectId);
         getUpdates();
-    }, [projectId, props.firebase, modal]);
-
-    const handleOpenModal = (modalContent) => {
-        setModal(true);
-        setModalContent(modalContent);
-    };
-
-    const handleCloseModal = () => {
-        setModal(false);
-    };
+    }, [projectId, props.firebase, getProject, getUpdates]);
 
     let updateList;
     if (updates) {
         updateList = Object.keys(updates).map((key) =>
             <Grid item xs={12} key={key}>
                 <UpdateCard
-                    handleOpenModal={handleOpenModal}
-                    handleCloseModal={handleCloseModal}
                     getUpdates={getUpdates}
                     projectId={projectId}
                     updateId={key}
@@ -81,7 +70,7 @@ const Updates = (props) => {
     }
 
     const defaultModalContent = (
-        <AddUpdate projectId={projectId} handleClose={handleCloseModal} getUpdates={getUpdates} />
+        <AddUpdate projectId={projectId} getUpdates={getUpdates} />
     )
 
     const classes = useStyles();
@@ -96,12 +85,9 @@ const Updates = (props) => {
             >
                 {updateList}
             </Grid>
-            <Fab aria-label='Add' className={classes.fab} color='primary' onClick={() => handleOpenModal(defaultModalContent)}>
+            <Fab aria-label='Add' className={classes.fab} color='primary' onClick={() => UI.setModalContent(defaultModalContent)}>
                 <AddIcon />
             </Fab>
-            <Modal open={modal} handleClose={handleCloseModal}>
-                {modalContent}
-            </Modal>
         </div >
     );
 };

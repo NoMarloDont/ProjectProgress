@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { withFirebase } from '../Firebase';
 import './AddUpdate.css';
 import { makeStyles } from '@material-ui/core/styles';
 import { openUploadWidget } from '../../utils/CloudinaryService';
-
+import { UIContext } from '../UIContext';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
@@ -23,6 +23,7 @@ const AddUpdate = (props) => {
     const [description, setDescription] = useState(props.update?.description);
     const [category, setCategory] = useState(props.update?.category);
     const [photo, setPhoto] = useState(props.update?.updateImage);
+    const UI = useContext(UIContext);
 
     const titleChangedHandler = (event) => {
         setTitle(event.target.value)
@@ -38,14 +39,14 @@ const AddUpdate = (props) => {
 
     const handleCreateUpdate = () => {
         props.firebase.createUpdate(title, description, category, props.projectId, photo).then(resp => {
-            props.handleClose();
+            UI.handleModalClose();
             props.getUpdates();
         }).catch(err => console.error(err));
     }
 
     const handleEditUpdate = () => {
         props.firebase.editUpdate(props.updateId, title, description, category, photo).then(resp => {
-            props.handleClose();
+            UI.handleModalClose();
             props.handleShowSettings();
             props.getUpdates();
         }).catch(err => console.error(err));
@@ -135,7 +136,7 @@ const AddUpdate = (props) => {
                     onClick={props.update ? handleEditUpdate : handleCreateUpdate}
                     disabled={isDisabled}
                 >
-                    Create
+                    {props.update ? 'Edit' : 'Create'}
                 </Button>
             </form>
         </div>

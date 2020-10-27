@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { withFirebase } from '../Firebase';
 import { classes } from './AddProject.css';
 import { makeStyles } from '@material-ui/core/styles';
 import { openUploadWidget } from '../../utils/CloudinaryService';
+import { UIContext } from '../UIContext';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -25,6 +26,7 @@ const AddProject = (props) => {
     const [category, setCategory] = useState(props.project?.category);
     const [photo, setPhoto] = useState(props.project?.projectImage);
 
+    const UI = useContext(UIContext);
     const history = useHistory();
 
     const nameChangedHandler = (event) => {
@@ -38,13 +40,15 @@ const AddProject = (props) => {
     const handleCreateProject = () => {
         props.firebase.createProject(name, props.userId, category, photo).then(resp => {
             history.push(`/project/${resp.path.pieces_[1]}`);
+            UI.handleModalClose();
         }).catch(err => console.error(err));
     }
 
     const handleEditProject = () => {
         props.firebase.editProject(name, props.userId, category, photo, props.projectId).then(resp => {
-            props.handleClose();
+            UI.handleModalClose();
             props.handleCloseSettings();
+            props.handleProjectsReTrigger();
         }).catch(err => console.error(err));
     }
 
@@ -88,7 +92,7 @@ const AddProject = (props) => {
             <div className="add-project__container">
                 <div className="add-project__title">
                     {props.project ? "Edit Project" : "Create Project"}
-            </div>
+                </div>
                 <form className={classes.root + ' add-project__form'}>
                     <TextField
                         type="text"

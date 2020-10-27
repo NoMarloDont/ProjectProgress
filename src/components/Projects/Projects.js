@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import ProjectCard from '../ProjectCard/ProjectCard';
-import Modal from '../Modal/Modal';
 import AddProject from '../AddProject/AddProject';
 import { Grid } from '@material-ui/core';
 import { withFirebase } from '../Firebase';
+import { UIContext } from '../UIContext';
 import './Projects.css';
 
 import Fab from '@material-ui/core/Fab';
@@ -24,25 +24,26 @@ const useStyles = makeStyles((theme) => ({
 
 const Projects = (props) => {
     const [projects, setProjects] = useState();
-    const [modal, setModal] = useState(false);
-    const [modalContent, setModalContent] = useState();
+    const [triggerGetProjects, setTriggerGetProjects] = useState(false);
+
     const history = useHistory();
 
     const classes = useStyles();
+
+    const UI = useContext(UIContext);
 
     useEffect(() => {
         props.firebase.getProjects(props.userId).then(val => {
             setProjects(val);
         });
-    }, [props.userId, props.firebase, modal]);
+    }, [props.userId, props.firebase, triggerGetProjects]);
 
     const handleOpenModal = (modalContent) => {
-        setModal(true);
-        setModalContent(modalContent);
+        UI.setModalContent(modalContent);
     };
 
-    const handleCloseModal = () => {
-        setModal(false);
+    const handleProjectsReTrigger = () => {
+        setTriggerGetProjects(!triggerGetProjects);
     };
 
     const handleSelectProject = (projectId) => {
@@ -55,14 +56,13 @@ const Projects = (props) => {
             <Grid item xs={12} sm={6} md={4} key={key}>
                 <ProjectCard
                     onClick={() => handleSelectProject(key)}
-                    handleOpenModal={handleOpenModal}
-                    handleCloseModal={handleCloseModal}
                     projectName={projects[key].projectName}
                     projectImage={projects[key].projectImage ? projects[key].projectImage
                         : "/static/images/guitarMarlo.jpg"}
                     projectKey={key}
                     project={projects[key]}
                     userId={props.userId}
+                    handleProjectsReTrigger={handleProjectsReTrigger}
                 />
             </Grid>
         );
@@ -77,8 +77,8 @@ const Projects = (props) => {
         );
     }
 
-    const defaultModalContent = (
-        <AddProject userId={props.userId} handleClose={handleCloseModal} />
+    const appProjectModalContent = (
+        <AddProject userId={props.userId} />
     );
 
     return (
@@ -92,12 +92,9 @@ const Projects = (props) => {
             >
                 {projectList}
             </Grid >
-            <Fab aria-label='Add' className={classes.fab} color='primary' onClick={() => handleOpenModal(defaultModalContent)}>
+            <Fab aria-label='Add' className={classes.fab} color='primary' onClick={() => handleOpenModal(appProjectModalContent)}>
                 <AddIcon />
             </Fab>
-            <Modal open={modal} handleClose={handleCloseModal}>
-                {modalContent}
-            </Modal>
         </div >
     );
 };
